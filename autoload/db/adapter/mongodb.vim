@@ -7,7 +7,7 @@ function! db#adapter#mongodb#input_extension() abort
 endfunction
 
 function! db#adapter#mongodb#output_extension() abort
-  return 'json'
+  return 'txt'
 endfunction
 
 function! db#adapter#mongodb#interactive(url) abort
@@ -15,9 +15,9 @@ function! db#adapter#mongodb#interactive(url) abort
   let params = url.params
   if url.scheme !=# 'mongodb' || has_key(url, 'opaque') ||
         \ len(filter(keys(params), 'v:val !~# "^tls$\\|^ssl$\\|^authSource$"'))
-    return ['mongo', a:url]
+    return ['mongosh', a:url, '--quiet']
   endif
-  return ['mongo'] +
+  return ['mongosh'] +
         \ (get(params, 'tls') =~# '^[1tT]' ? ['--tls'] : []) +
         \ (get(params, 'ssl') =~# '^[1tT]' ? ['--ssl'] : []) +
         \ (has_key(params, 'authSource') ? ['--authenticationDatabase', params['authSource']] : []) +
